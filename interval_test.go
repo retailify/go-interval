@@ -70,11 +70,13 @@ func TestMakeInterval(t *testing.T) {
 	assert.Equal(t, &endTime, interval.End)
 }
 
+func TestTimeInterval_EqualWithNilParameter(t *testing.T) {
+	assert.False(t, i1.Equal(nil))
+}
+
 func TestTimeInterval_Equal(t *testing.T) {
-	startTime, endTime := time.Now(), time.Now()
-	i1, _ := MakeTimeInterval(&startTime, &endTime)
-	i2, _ := MakeTimeInterval(&startTime, &endTime)
-	assert.True(t, true, i1.Equal(i2))
+	assert.False(t, i1.Equal(i2))
+	assert.True(t, i1.Equal(i1))
 }
 
 func TestTimeInterval_MeetsWithNilParameter(t *testing.T) {
@@ -82,7 +84,33 @@ func TestTimeInterval_MeetsWithNilParameter(t *testing.T) {
 }
 
 func TestTimeInterval_Meets(t *testing.T) {
-	// constrain to 24 hours difference
 	constraint := time.Duration(TwentyFourHours)
-	assert.True(t, i1.Meets(i2, constraint))
+	assert.True(t, i2.Meets(i1, constraint))
+	assert.False(t, i1.Meets(i1, constraint))
+}
+
+func TestTimeInterval_MetByWithNilParameter(t *testing.T) {
+	assert.False(t, i1.MetBy(nil, TwentyFourHours))
+}
+
+func TestTimeInterval_MetBy(t *testing.T) {
+	constraint := time.Duration(TwentyFourHours)
+	assert.True(t, i1.MetBy(i2, constraint))
+	assert.False(t, i1.MetBy(i1, constraint))
+}
+
+func TestTimeInterval_PrecedesWithNilParameter(t *testing.T) {
+	assert.False(t, i1.Precedes(nil, TwentyFourHours))
+}
+
+func TestTimeInterval_Precedes(t *testing.T) {
+	// interval 2
+	vPrecedeS := "2014-05-06 00:00 UTC"
+	vPrecedeE := "2014-05-10 00:00 UTC"
+	tPrecedeS, _ := time.Parse(timeFormat, vPrecedeS)
+	tPrecedeE, _ := time.Parse(timeFormat, vPrecedeE)
+	iPrecede, _ := MakeTimeInterval(&tPrecedeS, &tPrecedeE)
+	constraint := time.Duration(TwentyFourHours)
+	assert.True(t, i1.Precedes(iPrecede, constraint))
+	assert.False(t, i1.Precedes(i2, constraint))
 }

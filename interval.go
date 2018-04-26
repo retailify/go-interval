@@ -56,7 +56,7 @@ func (i *TimeInterval) Equal(interval *TimeInterval) bool {
 	if i.Start.Equal(*interval.Start) && i.End.Equal(*interval.End) {
 		return true
 	}
-	return false;
+	return false
 }
 
 // Meets
@@ -64,24 +64,36 @@ func (i *TimeInterval) Meets(interval *TimeInterval, constraint time.Duration) b
 	if interval == nil {
 		return false
 	}
-	if result := i.End.Sub(*interval.Start)*-1; result != constraint {
+	if result := i.Start.Sub(*interval.End); result != constraint {
 		return false
 	}
-	return true;
+	return true
 }
 
-
-/* TODO
-// Precedes
-// converse relation of PrecedesBy
-func (i *TimeInterval) Precedes(interval *TimeInterval) bool {
+// MetBy
+func (i *TimeInterval) MetBy(interval *TimeInterval, constraint time.Duration) bool {
 	if interval == nil {
 		return false
 	}
-	return false;
+	if result := interval.Start.Sub(*i.End); result != constraint {
+		return false
+	}
+	return true
 }
 
+// Precedes
+// converse relation of PrecedesBy
+func (i *TimeInterval) Precedes(interval *TimeInterval, constraint time.Duration) bool {
+	if interval == nil {
+		return false
+	}
+	if result := interval.Start.Sub(*i.End); result <= constraint {
+		return false
+	}
+	return true
+}
 
+/* TODO
 
 // Overlaps
 // converse relation of OverlappedBy
