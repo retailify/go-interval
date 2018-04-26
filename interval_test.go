@@ -24,6 +24,29 @@ import (
 	"time"
 )
 
+const (
+	timeFormat = "2006-01-02 15:04 MST"
+	TwentyFourHours = 24 * time.Hour
+)
+
+var i1, i2 *TimeInterval
+
+func init() {
+	// interval 2
+	v1s := "2014-05-03 00:00 UTC"
+	v1e := "2014-05-04 00:00 UTC"
+	t1s, _ := time.Parse(timeFormat, v1s)
+	t1e, _ := time.Parse(timeFormat, v1e)
+	i1, _ = MakeTimeInterval(&t1s, &t1e)
+
+	// interval 2
+	v2s := "2014-05-05 00:00 UTC"
+	v2e := "2014-05-06 00:00 UTC"
+	t2s, _ := time.Parse(timeFormat, v2s)
+	t2e, _ := time.Parse(timeFormat, v2e)
+	i2, _ = MakeTimeInterval(&t2s, &t2e)
+}
+
 func TestMakeTimeIntervalWithEmptyStartTime(t *testing.T) {
 	_, err := MakeTimeInterval(nil, nil)
 	assert.EqualError(t, err, EmptyStartTimeError)
@@ -33,6 +56,10 @@ func TestMakeTimeIntervalWithEmptyEndTime(t *testing.T) {
 	startTime := time.Now()
 	_, err := MakeTimeInterval(&startTime, nil)
 	assert.EqualError(t, err, EmptyEndTimeError)
+}
+
+func TestTimeInterval_ToString(t *testing.T) {
+	assert.Equal(t, "2014-05-03T00:00:00Z - 2014-05-04T00:00:00Z", i1.ToString(time.RFC3339))
 }
 
 func TestMakeInterval(t *testing.T) {
@@ -48,4 +75,14 @@ func TestTimeInterval_Equal(t *testing.T) {
 	i1, _ := MakeTimeInterval(&startTime, &endTime)
 	i2, _ := MakeTimeInterval(&startTime, &endTime)
 	assert.True(t, true, i1.Equal(i2))
+}
+
+func TestTimeInterval_MeetsWithNilParameter(t *testing.T) {
+	assert.False(t, i1.Meets(nil, TwentyFourHours))
+}
+
+func TestTimeInterval_Meets(t *testing.T) {
+	// constrain to 24 hours difference
+	constraint := time.Duration(TwentyFourHours)
+	assert.True(t, i1.Meets(i2, constraint))
 }

@@ -20,6 +20,7 @@ package interval
 import (
 	"time"
 	"errors"
+	"fmt"
 )
 
 type TimeInterval struct {
@@ -42,6 +43,11 @@ func MakeTimeInterval(start, end *time.Time) (*TimeInterval, error){
 	return &TimeInterval{Start:start, End: end}, nil
 }
 
+// ToString returns the formatted interval dates
+func (i *TimeInterval) ToString(format string) string {
+	return fmt.Sprintf("%v - %v", i.Start.Format(format), i.End.Format(format))
+}
+
 // Equal checks two time intervals are equal or not
 func (i *TimeInterval) Equal(interval *TimeInterval) bool {
 	if interval == nil {
@@ -53,6 +59,18 @@ func (i *TimeInterval) Equal(interval *TimeInterval) bool {
 	return false;
 }
 
+// Meets
+func (i *TimeInterval) Meets(interval *TimeInterval, constraint time.Duration) bool {
+	if interval == nil {
+		return false
+	}
+	if result := i.End.Sub(*interval.Start)*-1; result != constraint {
+		return false
+	}
+	return true;
+}
+
+
 /* TODO
 // Precedes
 // converse relation of PrecedesBy
@@ -63,14 +81,7 @@ func (i *TimeInterval) Precedes(interval *TimeInterval) bool {
 	return false;
 }
 
-// Meets
-// converse relation of MeetsBy
-func (i *TimeInterval) Meets(interval *TimeInterval) bool {
-	if interval == nil {
-		return false
-	}
-	return false;
-}
+
 
 // Overlaps
 // converse relation of OverlappedBy
@@ -78,6 +89,9 @@ func (i *TimeInterval) Overlaps(interval *TimeInterval) bool {
 	if interval == nil {
 		return false
 	}
+
+	fmt.Println(i.End.Sub(*interval.Start))
+
 	return false;
 }
 
