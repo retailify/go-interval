@@ -183,7 +183,7 @@ func (i *TimeInterval) Meets(interval *TimeInterval, constraint time.Duration) b
 	if interval == nil {
 		return false
 	}
-	if result := i.subStartTimeFromEndTime(interval); result != constraint {
+	if result := i.startTime.Sub(*interval.endTime); result != constraint {
 		return false
 	}
 	return true
@@ -276,11 +276,12 @@ func (i *TimeInterval) Starts(interval *TimeInterval) bool {
 // is shorter than interval B's duration
 //
 // converse relation of Starts
-//
-// TODO
 func (i *TimeInterval) StartedBy(interval *TimeInterval) bool {
 	if interval == nil {
 		return false
+	}
+	if i.startTime.Equal(*interval.startTime) && i.endTime.After(*interval.endTime) {
+		return true
 	}
 	return false
 }
@@ -288,11 +289,12 @@ func (i *TimeInterval) StartedBy(interval *TimeInterval) bool {
 // During returns true if interval A is contained by interval B
 //
 // converse relation of Contains
-//
-// TODO
 func (i *TimeInterval) During(interval *TimeInterval) bool {
 	if interval == nil {
 		return false
+	}
+	if i.startTime.After(*interval.startTime) && i.endTime.Before(*interval.endTime) {
+		return true
 	}
 	return false
 }
@@ -301,11 +303,12 @@ func (i *TimeInterval) During(interval *TimeInterval) bool {
 // A's startTime
 //
 // converse relation of FinishedBy
-//
-// TODO
 func (i *TimeInterval) Finishes(interval *TimeInterval) bool {
 	if interval == nil {
 		return false
+	}
+	if i.startTime.After(*interval.startTime) && i.endTime.Equal(*interval.endTime) {
+		return true
 	}
 	return false
 }
@@ -314,12 +317,15 @@ func (i *TimeInterval) Finishes(interval *TimeInterval) bool {
 // and A's endTime is greater than B's endTime
 //
 // converse relation to Overlaps
-//
-// TODO
 func (i *TimeInterval) OverlappedBy(interval *TimeInterval) bool {
 	if interval == nil {
 		return false
 	}
+
+	if i.startTime.After(*interval.startTime) && i.endTime.After(*interval.endTime) {
+		return true
+	}
+
 	return false
 }
 
@@ -327,15 +333,12 @@ func (i *TimeInterval) OverlappedBy(interval *TimeInterval) bool {
 // greater than A's startTime
 //
 // converse relation of Precedes
-//
-// TODO
 func (i *TimeInterval) PrecededBy(interval *TimeInterval, constraint time.Duration) bool {
 	if interval == nil {
 		return false
 	}
-	return false
-}
-
-func (i *TimeInterval) subStartTimeFromEndTime(interval *TimeInterval) time.Duration {
-	return i.startTime.Sub(*interval.endTime)
+	if result := i.startTime.Sub(*interval.endTime); result <= constraint {
+		return false
+	}
+	return true
 }

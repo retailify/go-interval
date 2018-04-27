@@ -32,7 +32,7 @@ const (
 	TwentyFourHours = 24 * time.Hour
 )
 
-var i1, i2, i3, i4, i5, i6 *interval.TimeInterval
+var i1, i2, i3, i4, i5, i6, i7 *interval.TimeInterval
 var t1s, t1e time.Time
 
 func init() {
@@ -77,6 +77,13 @@ func init() {
 	t6s, _ := time.Parse(timeFormat, v6s)
 	t6e, _ := time.Parse(timeFormat, v6e)
 	i6, _ = interval.MakeTimeInterval(&t6s, &t6e)
+
+	// interval 7
+	v7s := "2014-05-15 00:00 UTC"
+	v7e := "2014-05-25 00:00 UTC"
+	t7s, _ := time.Parse(timeFormat, v7s)
+	t7e, _ := time.Parse(timeFormat, v7e)
+	i7, _ = interval.MakeTimeInterval(&t7s, &t7e)
 }
 
 func TestMakeTimeIntervalWithEmptyStartTime(t *testing.T) {
@@ -141,7 +148,6 @@ func TestTimeInterval_MetBy(t *testing.T) {
 }
 
 func TestTimeInterval_Precedes(t *testing.T) {
-	// interval 2
 	vPrecedeS := "2014-05-06 00:00 UTC"
 	vPrecedeE := "2014-05-10 00:00 UTC"
 	tPrecedeS, _ := time.Parse(timeFormat, vPrecedeS)
@@ -151,6 +157,18 @@ func TestTimeInterval_Precedes(t *testing.T) {
 	assert.True(t, i1.Precedes(iPrecede, constraint))
 	assert.False(t, i1.Precedes(i2, constraint))
 	assert.False(t, i1.Precedes(nil, TwentyFourHours))
+}
+
+func TestTimeInterval_PrecededBy(t *testing.T) {
+	vPrecedeS := "2014-05-06 00:00 UTC"
+	vPrecedeE := "2014-05-10 00:00 UTC"
+	tPrecedeS, _ := time.Parse(timeFormat, vPrecedeS)
+	tPrecedeE, _ := time.Parse(timeFormat, vPrecedeE)
+	iPrecede, _ := interval.MakeTimeInterval(&tPrecedeS, &tPrecedeE)
+	constraint := time.Duration(TwentyFourHours)
+	assert.True(t, iPrecede.PrecededBy(i1, constraint))
+	assert.False(t, i2.PrecededBy(i1, constraint))
+	assert.False(t, i1.PrecededBy(nil, TwentyFourHours))
 }
 
 func TestTimeInterval_Duration(t *testing.T) {
@@ -170,6 +188,16 @@ func TestTimeInterval_Overlaps(t *testing.T) {
 	assert.True(t, i3.Overlaps(i4))
 }
 
+func TestTimeInterval_OverlappedBy(t *testing.T) {
+	assert.False(t, i1.OverlappedBy(nil))
+	assert.True(t, i4.OverlappedBy(i3))
+}
+
+func TestTimeInterval_Finishes(t *testing.T) {
+	assert.True(t, i5.Finishes(i4))
+	assert.False(t, i1.Finishes(nil))
+}
+
 func TestTimeInterval_FinishedBy(t *testing.T) {
 	assert.True(t, i4.FinishedBy(i5))
 	assert.False(t, i1.FinishedBy(nil))
@@ -180,8 +208,18 @@ func TestTimeInterval_Contains(t *testing.T) {
 	assert.False(t, i1.Contains(nil))
 }
 
+func TestTimeInterval_During(t *testing.T) {
+	assert.True(t, i2.During(i3))
+	assert.False(t, i1.During(nil))
+}
+
+
 func TestTimeInterval_Starts(t *testing.T) {
 	assert.False(t, i1.Starts(nil))
 	assert.True(t, i6.Starts(i5))
 }
 
+func TestTimeInterval_StartedBy(t *testing.T) {
+	assert.False(t, i1.StartedBy(nil))
+	assert.True(t, i5.StartedBy(i6))
+}
