@@ -62,7 +62,7 @@ func TestMakeTimeIntervalWithEmptyEndTime(t *testing.T) {
 }
 
 func TestTimeInterval_String(t *testing.T) {
-	assert.Equal(t, "[2014-05-03T00:00:00Z .. 2014-05-04T00:00:00Z]", i1.String(time.RFC3339))
+	assert.Equal(t, "[2014-05-03T00:00:00Z, 2014-05-04T00:00:00Z]", i1.String(time.RFC3339))
 }
 
 func ExampleTimeInterval_String() {
