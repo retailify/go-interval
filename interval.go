@@ -37,6 +37,50 @@ type TimeInterval struct {
 	endTime   *time.Time
 }
 
+// State type represents the relation type of two TimeInterval's
+type State int
+
+const (
+	//Precedes relation
+	Precedes State = 0
+
+	// Meets relation
+	Meets State = 1
+
+	// Overlaps relation
+	Overlaps State = 2
+
+	// FinishedBy relation
+	FinishedBy State = 3
+
+	// Contains relation
+	Contains State = 4
+
+	// Starts relation
+	Starts State = 5
+
+	// Equals relation
+	Equals State = 6
+
+	// StartedBy relation
+	StartedBy State = 7
+
+	// During relation
+	During State = 8
+
+	// Finishes relation
+	Finishes State = 9
+
+	// OverlappedBy relation
+	OverlappedBy State = 10
+
+	// MetBy relation
+	MetBy State = 11
+
+	// PrecededBy relation
+	PrecededBy State = 12
+)
+
 const (
 	// TimeIntervalEmptyStartTimeError error message
 	TimeIntervalEmptyStartTimeError = "start time must not empty"
@@ -88,7 +132,7 @@ func (i *TimeInterval) Equal(interval *TimeInterval) bool {
 	return false
 }
 
-// Meets
+// Meets returns true if interval A meets B
 func (i *TimeInterval) Meets(interval *TimeInterval, constraint time.Duration) bool {
 	if interval == nil {
 		return false
@@ -99,7 +143,7 @@ func (i *TimeInterval) Meets(interval *TimeInterval, constraint time.Duration) b
 	return true
 }
 
-// MetBy
+// MetBy returns true if interval A is met by B
 func (i *TimeInterval) MetBy(interval *TimeInterval, constraint time.Duration) bool {
 	if interval == nil {
 		return false
@@ -110,7 +154,7 @@ func (i *TimeInterval) MetBy(interval *TimeInterval, constraint time.Duration) b
 	return true
 }
 
-// Precedes
+// Precedes returns true if interval A preceds B
 // converse relation of PrecedesBy
 func (i *TimeInterval) Precedes(interval *TimeInterval, constraint time.Duration) bool {
 	if interval == nil {
