@@ -32,7 +32,7 @@ const (
 	TwentyFourHours = 24 * time.Hour
 )
 
-var i1, i2, i3, i4, i5 *interval.TimeInterval
+var i1, i2, i3, i4, i5, i6 *interval.TimeInterval
 var t1s, t1e time.Time
 
 func init() {
@@ -70,6 +70,13 @@ func init() {
 	t5s, _ := time.Parse(timeFormat, v5s)
 	t5e, _ := time.Parse(timeFormat, v5e)
 	i5, _ = interval.MakeTimeInterval(&t5s, &t5e)
+
+	// interval 6
+	v6s := "2014-05-15 00:00 UTC"
+	v6e := "2014-05-25 00:00 UTC"
+	t6s, _ := time.Parse(timeFormat, v6s)
+	t6e, _ := time.Parse(timeFormat, v6e)
+	i6, _ = interval.MakeTimeInterval(&t6s, &t6e)
 }
 
 func TestMakeTimeIntervalWithEmptyStartTime(t *testing.T) {
@@ -171,5 +178,10 @@ func TestTimeInterval_FinishedBy(t *testing.T) {
 func TestTimeInterval_Contains(t *testing.T) {
 	assert.True(t, i3.Contains(i2))
 	assert.False(t, i1.Contains(nil))
+}
+
+func TestTimeInterval_Starts(t *testing.T) {
+	assert.False(t, i1.Starts(nil))
+	assert.True(t, i6.Starts(i5))
 }
 
