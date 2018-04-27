@@ -144,7 +144,7 @@ func (i *TimeInterval) Relation(interval *TimeInterval, constraint time.Duration
 		state, err = Contains, nil
 	} else if i.Starts(interval) {
 		state, err = Starts, nil
-	} else if i.Equal(interval) {
+	} else if i.Equals(interval) {
 		state, err = Equals, nil
 	} else if i.StartedBy(interval) {
 		state, err = StartedBy, nil
@@ -163,10 +163,10 @@ func (i *TimeInterval) Relation(interval *TimeInterval, constraint time.Duration
 	return
 }
 
-// Equal checks two time intervals are equal or not
+// Equals checks two time intervals are equal or not
 //
-// converse relation of Equal is Equal
-func (i *TimeInterval) Equal(interval *TimeInterval) bool {
+// converse relation of Equals is Equals
+func (i *TimeInterval) Equals(interval *TimeInterval) bool {
 	if interval == nil {
 		return false
 	}
@@ -220,14 +220,14 @@ func (i *TimeInterval) Precedes(interval *TimeInterval, constraint time.Duration
 // Overlaps returns true if interval A overlaps B
 //
 // converse relation of OverlappedBy
-//
-// TODO
 func (i *TimeInterval) Overlaps(interval *TimeInterval) bool {
 	if interval == nil {
 		return false
 	}
 
-	fmt.Println(i.endTime.Sub(*interval.startTime))
+	if i.startTime.Before(*interval.startTime) && interval.startTime.Before(*i.endTime) {
+		return true
+	}
 
 	return false
 }

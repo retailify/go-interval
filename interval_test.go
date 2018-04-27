@@ -22,6 +22,7 @@ import (
 	"time"
 
 	"fmt"
+
 	interval "github.com/retailify/go-interval"
 	"github.com/stretchr/testify/assert"
 )
@@ -31,7 +32,7 @@ const (
 	TwentyFourHours = 24 * time.Hour
 )
 
-var i1, i2 *interval.TimeInterval
+var i1, i2, i3, i4 *interval.TimeInterval
 var t1s, t1e time.Time
 
 func init() {
@@ -48,6 +49,20 @@ func init() {
 	t2s, _ := time.Parse(timeFormat, v2s)
 	t2e, _ := time.Parse(timeFormat, v2e)
 	i2, _ = interval.MakeTimeInterval(&t2s, &t2e)
+
+	// interval 3
+	v3s := "2014-05-01 00:00 UTC"
+	v3e := "2014-05-18 00:00 UTC"
+	t3s, _ := time.Parse(timeFormat, v3s)
+	t3e, _ := time.Parse(timeFormat, v3e)
+	i3, _ = interval.MakeTimeInterval(&t3s, &t3e)
+
+	// interval 4
+	v4s := "2014-05-14 00:00 UTC"
+	v4e := "2014-05-30 00:00 UTC"
+	t4s, _ := time.Parse(timeFormat, v4s)
+	t4e, _ := time.Parse(timeFormat, v4e)
+	i4, _ = interval.MakeTimeInterval(&t4s, &t4e)
 }
 
 func TestMakeTimeIntervalWithEmptyStartTime(t *testing.T) {
@@ -88,13 +103,13 @@ func ExampleMakeTimeInterval() {
 	interval.MakeTimeInterval(&startTime, &endTime)
 }
 
-func TestTimeInterval_EqualWithNilParameter(t *testing.T) {
-	assert.False(t, i1.Equal(nil))
+func TestTimeInterval_EqualsWithNilParameter(t *testing.T) {
+	assert.False(t, i1.Equals(nil))
 }
 
-func TestTimeInterval_Equal(t *testing.T) {
-	assert.False(t, i1.Equal(i2))
-	assert.True(t, i1.Equal(i1))
+func TestTimeInterval_Equals(t *testing.T) {
+	assert.False(t, i1.Equals(i2))
+	assert.True(t, i1.Equals(i1))
 }
 
 func TestTimeInterval_MeetsWithNilParameter(t *testing.T) {
@@ -143,4 +158,12 @@ func TestTimeInterval_Start(t *testing.T) {
 
 func TestTimeInterval_End(t *testing.T) {
 	assert.Equal(t, t1e, *i1.End())
+}
+
+func TestTimeInterval_OverlapsWithNilParameter(t *testing.T) {
+	assert.False(t, i1.Overlaps(nil))
+}
+
+func TestTimeInterval_Overlaps(t *testing.T) {
+	assert.True(t, i3.Overlaps(i4))
 }
