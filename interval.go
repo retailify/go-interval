@@ -183,7 +183,7 @@ func (i *TimeInterval) Meets(interval *TimeInterval, constraint time.Duration) b
 	if interval == nil {
 		return false
 	}
-	if result := i.startTime.Sub(*interval.endTime); result != constraint {
+	if result := i.subStartTimeFromEndTime(interval); result != constraint {
 		return false
 	}
 	return true
@@ -331,4 +331,8 @@ func (i *TimeInterval) PrecededBy(interval *TimeInterval, constraint time.Durati
 		return false
 	}
 	return false
+}
+
+func (i *TimeInterval) subStartTimeFromEndTime(interval *TimeInterval) time.Duration {
+	return i.startTime.Sub(*interval.endTime)
 }
