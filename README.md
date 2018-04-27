@@ -13,9 +13,18 @@ go lang time intervals.
 
 ## Installation
 
+### go get
+
 ``` bash
 
-go get github.com/retailify/go-time-interval
+go get github.com/retailify/go-interval
+```
+
+### glide
+
+``` bash
+
+glide get github.com/retailify/go-interval
 ```
 
 ## Documentation
@@ -25,7 +34,6 @@ go get github.com/retailify/go-time-interval
 ## Usage
 
 ``` go
-import "github.com/retailify/go-time-interval"
+import "github.com/retailify/go-interval"
 ```
 
-The TimeInterval functions are in the interval package.
