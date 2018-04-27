@@ -119,28 +119,18 @@ func TestTimeInterval_Equals(t *testing.T) {
 	assert.True(t, i1.Equals(i1))
 }
 
-func TestTimeInterval_MeetsWithNilParameter(t *testing.T) {
-	assert.False(t, i1.Meets(nil, TwentyFourHours))
-}
-
 func TestTimeInterval_Meets(t *testing.T) {
 	constraint := time.Duration(TwentyFourHours)
 	assert.True(t, i2.Meets(i1, constraint))
 	assert.False(t, i1.Meets(i1, constraint))
-}
-
-func TestTimeInterval_MetByWithNilParameter(t *testing.T) {
-	assert.False(t, i1.MetBy(nil, TwentyFourHours))
+	assert.False(t, i1.Meets(nil, TwentyFourHours))
 }
 
 func TestTimeInterval_MetBy(t *testing.T) {
 	constraint := time.Duration(TwentyFourHours)
 	assert.True(t, i1.MetBy(i2, constraint))
 	assert.False(t, i1.MetBy(i1, constraint))
-}
-
-func TestTimeInterval_PrecedesWithNilParameter(t *testing.T) {
-	assert.False(t, i1.Precedes(nil, TwentyFourHours))
+	assert.False(t, i1.MetBy(nil, TwentyFourHours))
 }
 
 func TestTimeInterval_Precedes(t *testing.T) {
@@ -153,6 +143,7 @@ func TestTimeInterval_Precedes(t *testing.T) {
 	constraint := time.Duration(TwentyFourHours)
 	assert.True(t, i1.Precedes(iPrecede, constraint))
 	assert.False(t, i1.Precedes(i2, constraint))
+	assert.False(t, i1.Precedes(nil, TwentyFourHours))
 }
 
 func TestTimeInterval_Duration(t *testing.T) {
@@ -167,27 +158,18 @@ func TestTimeInterval_End(t *testing.T) {
 	assert.Equal(t, t1e, *i1.End())
 }
 
-func TestTimeInterval_OverlapsWithNilParameter(t *testing.T) {
-	assert.False(t, i1.Overlaps(nil))
-}
-
 func TestTimeInterval_Overlaps(t *testing.T) {
+	assert.False(t, i1.Overlaps(nil))
 	assert.True(t, i3.Overlaps(i4))
-}
-
-func TestTimeInterval_FinishedByWithNilParameter(t *testing.T) {
-	assert.False(t, i1.FinishedBy(nil))
 }
 
 func TestTimeInterval_FinishedBy(t *testing.T) {
 	assert.True(t, i4.FinishedBy(i5))
-}
-
-func TestTimeInterval_ContainsWithNilParameter(t *testing.T) {
-	assert.False(t, i1.Contains(nil))
+	assert.False(t, i1.FinishedBy(nil))
 }
 
 func TestTimeInterval_Contains(t *testing.T) {
 	assert.True(t, i3.Contains(i2))
+	assert.False(t, i1.Contains(nil))
 }
 

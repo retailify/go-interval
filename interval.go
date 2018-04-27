@@ -262,11 +262,12 @@ func (i *TimeInterval) Contains(interval *TimeInterval) bool {
 // is greater than interval B's duration
 //
 // converse relation of StartedBy
-//
-// TODO
 func (i *TimeInterval) Starts(interval *TimeInterval) bool {
 	if interval == nil {
 		return false
+	}
+	if i.startTime.Equal(*interval.startTime) && i.endTime.Before(*interval.endTime) {
+		return true
 	}
 	return false
 }
