@@ -8,7 +8,6 @@ The library is ready for production if I tag the library with 1.0.0.
 [![Go Report Card][go-report-badge]][go-report-url]
 [![Maintainability][codeclimate-badge]][codeclimate-url]
 
-
 This library implements the [Allen's interval algebra][allens-url] for
 go lang time intervals.
 
@@ -36,7 +35,6 @@ go get github.com/retailify/go-interval
 
 glide get github.com/retailify/go-interval
 ```
-
 
 ## Usage
 
