@@ -8,8 +8,9 @@
 This library implements the [Allen's interval algebra](http://www.ics.uci.edu/~alspaugh/cls/shr/allen.html) for
 go lang time intervals.
 
+## Documentation
 
-
+[godoc.org documentation](https://godoc.org/github.com/retailify/go-interval)
 
 ## Installation
 
@@ -27,9 +28,6 @@ go get github.com/retailify/go-interval
 glide get github.com/retailify/go-interval
 ```
 
-## Documentation
-
-[godoc.org documentation](https://godoc.org/github.com/retailify/go-interval)
 
 ## Usage
 
