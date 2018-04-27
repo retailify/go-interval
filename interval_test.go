@@ -36,7 +36,7 @@ var i1, i2, i3, i4, i5, i6, i7 *interval.TimeInterval
 var t1s, t1e time.Time
 
 func init() {
-	// interval 2
+	// interval 1
 	v1s := "2014-05-03 00:00 UTC"
 	v1e := "2014-05-04 00:00 UTC"
 	t1s, _ = time.Parse(timeFormat, v1s)
@@ -78,12 +78,12 @@ func init() {
 	t6e, _ := time.Parse(timeFormat, v6e)
 	i6, _ = interval.MakeTimeInterval(&t6s, &t6e)
 
-	// interval 7
-	v7s := "2014-05-15 00:00 UTC"
-	v7e := "2014-05-25 00:00 UTC"
+	v7s := "2014-05-06 00:00 UTC"
+	v7e := "2014-05-10 00:00 UTC"
 	t7s, _ := time.Parse(timeFormat, v7s)
 	t7e, _ := time.Parse(timeFormat, v7e)
 	i7, _ = interval.MakeTimeInterval(&t7s, &t7e)
+
 }
 
 func TestMakeTimeIntervalWithEmptyStartTime(t *testing.T) {
@@ -136,52 +136,46 @@ func TestTimeInterval_Equals(t *testing.T) {
 
 func TestTimeInterval_Meets(t *testing.T) {
 	constraint := time.Duration(TwentyFourHours)
-	assert.True(t, i2.Meets(i1, constraint))
+	assert.True(t, i1.Meets(i2, constraint))
 	assert.False(t, i1.Meets(i1, constraint))
 	assert.False(t, i1.Meets(nil, TwentyFourHours))
 
-	state, _ := i2.Relation(i1, constraint)
+	state, _ := i1.Relation(i2, constraint)
 	assert.Equal(t, interval.Meets, state)
 }
 
 func TestTimeInterval_MetBy(t *testing.T) {
 	constraint := time.Duration(TwentyFourHours)
-	assert.True(t, i1.MetBy(i2, constraint))
+	assert.True(t, i2.MetBy(i1, constraint))
 	assert.False(t, i1.MetBy(i1, constraint))
 	assert.False(t, i1.MetBy(nil, TwentyFourHours))
 
-	state, _ := i1.Relation(i2, constraint)
+	state, _ := i2.Relation(i1, constraint)
 	assert.Equal(t, interval.MetBy, state)
 }
 
 func TestTimeInterval_Precedes(t *testing.T) {
-	vPrecedeS := "2014-05-06 00:00 UTC"
-	vPrecedeE := "2014-05-10 00:00 UTC"
-	tPrecedeS, _ := time.Parse(timeFormat, vPrecedeS)
-	tPrecedeE, _ := time.Parse(timeFormat, vPrecedeE)
-	iPrecede, _ := interval.MakeTimeInterval(&tPrecedeS, &tPrecedeE)
+
 	constraint := time.Duration(TwentyFourHours)
 
-	assert.True(t, i1.Precedes(iPrecede, constraint))
+	assert.True(t, i1.Precedes(i7, constraint))
 	assert.False(t, i1.Precedes(i2, constraint))
 	assert.False(t, i1.Precedes(nil, TwentyFourHours))
 
-	state, _ := i1.Relation(iPrecede, constraint)
+	state, _ := i1.Relation(i7, constraint)
 	assert.Equal(t, interval.Precedes, state)
 }
 
 func TestTimeInterval_PrecededBy(t *testing.T) {
-	vPrecedeS := "2014-05-06 00:00 UTC"
-	vPrecedeE := "2014-05-10 00:00 UTC"
-	tPrecedeS, _ := time.Parse(timeFormat, vPrecedeS)
-	tPrecedeE, _ := time.Parse(timeFormat, vPrecedeE)
-	iPrecede, _ := interval.MakeTimeInterval(&tPrecedeS, &tPrecedeE)
 	constraint := time.Duration(TwentyFourHours)
-	assert.True(t, iPrecede.PrecededBy(i1, constraint))
+
+	assert.True(t, i7.PrecededBy(i1, constraint))
+	state, _ := i7.Relation(i1, constraint)
+	assert.Equal(t, interval.PrecededBy, state)
+
 	assert.False(t, i2.PrecededBy(i1, constraint))
 	assert.False(t, i1.PrecededBy(nil, TwentyFourHours))
-	state, _ := iPrecede.Relation(i1, constraint)
-	assert.Equal(t, interval.PrecededBy, state)
+
 }
 
 func TestTimeInterval_Duration(t *testing.T) {
@@ -222,18 +216,20 @@ func TestTimeInterval_Finishes(t *testing.T) {
 
 func TestTimeInterval_FinishedBy(t *testing.T) {
 	assert.True(t, i4.FinishedBy(i5))
-	assert.False(t, i5.FinishedBy(i4))
-	assert.False(t, i1.FinishedBy(nil))
 	state, _ := i4.Relation(i5, time.Duration(0))
 	assert.Equal(t, interval.FinishedBy, state)
+
+	assert.False(t, i5.FinishedBy(i4))
+	assert.False(t, i1.FinishedBy(nil))
 }
 
 func TestTimeInterval_Contains(t *testing.T) {
 	assert.True(t, i3.Contains(i2))
-	assert.False(t, i2.Contains(i3))
-	assert.False(t, i1.Contains(nil))
 	state, _ := i3.Relation(i2, time.Duration(0))
 	assert.Equal(t, interval.Contains, state)
+
+	assert.False(t, i2.Contains(i3))
+	assert.False(t, i1.Contains(nil))
 }
 
 func TestTimeInterval_During(t *testing.T) {

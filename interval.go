@@ -132,32 +132,45 @@ func (i *TimeInterval) Relation(interval *TimeInterval, constraint time.Duration
 
 	if interval == nil {
 		state, err = Unknown, errors.New(TimeIntervalError)
+
 	} else if i.Precedes(interval, constraint) {
 		state, err = Precedes, nil
-	} else if i.Meets(interval, constraint) {
-		state, err = Meets, nil
-	} else if i.Overlaps(interval) {
-		state, err = Overlaps, nil
-	} else if i.FinishedBy(interval) {
-		state, err = FinishedBy, nil
-	} else if i.Contains(interval) {
-		state, err = Contains, nil
-	} else if i.Starts(interval) {
-		state, err = Starts, nil
-	} else if i.Equals(interval) {
-		state, err = Equals, nil
-	} else if i.StartedBy(interval) {
-		state, err = StartedBy, nil
-	} else if i.During(interval) {
-		state, err = During, nil
-	} else if i.Finishes(interval) {
-		state, err = Finishes, nil
-	} else if i.OverlappedBy(interval) {
-		state, err = OverlappedBy, nil
-	} else if i.MetBy(interval, constraint) {
-		state, err = MetBy, nil
+
 	} else if i.PrecededBy(interval, constraint) {
 		state, err = PrecededBy, nil
+
+	} else if i.Meets(interval, constraint) {
+		state, err = Meets, nil
+
+	} else if i.Overlaps(interval) {
+		state, err = Overlaps, nil
+
+	} else if i.MetBy(interval, constraint) {
+		state, err = MetBy, nil
+
+	} else if i.FinishedBy(interval) {
+		state, err = FinishedBy, nil
+
+	} else if i.Contains(interval) {
+		state, err = Contains, nil
+
+	} else if i.Starts(interval) {
+		state, err = Starts, nil
+
+	} else if i.Equals(interval) {
+		state, err = Equals, nil
+
+	} else if i.StartedBy(interval) {
+		state, err = StartedBy, nil
+
+	} else if i.During(interval) {
+		state, err = During, nil
+
+	} else if i.Finishes(interval) {
+		state, err = Finishes, nil
+
+	} else if i.OverlappedBy(interval) {
+		state, err = OverlappedBy, nil
 	}
 
 	return
@@ -183,25 +196,34 @@ func (i *TimeInterval) Meets(interval *TimeInterval, constraint time.Duration) b
 	if interval == nil {
 		return false
 	}
-	if result := i.startTime.Sub(*interval.endTime); result != constraint {
-		return false
+
+	// result := i.endTime.Add(constraint) // .Equal(*interval.startTime)
+	// fmt.Println(i.String(time.RFC3339), interval.String(time.RFC3339), result)
+
+	if i.endTime.Before(*interval.startTime) &&
+		i.endTime.Add(constraint).Equal(*interval.startTime) {
+		return true
 	}
-	return true
+	return false
 }
 
 // MetBy returns true if interval A is met by B
 //
 // converse relation of Met
-//
-// TODO
 func (i *TimeInterval) MetBy(interval *TimeInterval, constraint time.Duration) bool {
 	if interval == nil {
 		return false
 	}
-	if result := interval.startTime.Sub(*i.endTime); result != constraint {
-		return false
+
+	// result := interval.endTime.Add(constraint)
+	// fmt.Println(i.String(time.RFC3339), interval.String(time.RFC3339), result)
+
+	if i.startTime.After(*interval.endTime) &&
+		interval.endTime.Add(constraint).Equal(*i.startTime) {
+		return true
 	}
-	return true
+
+	return false
 }
 
 // Precedes returns true if interval A precedes B by duration
@@ -225,7 +247,8 @@ func (i *TimeInterval) Overlaps(interval *TimeInterval) bool {
 		return false
 	}
 
-	if i.startTime.Before(*interval.startTime) && interval.startTime.Before(*i.endTime) {
+	if i.startTime.Before(*interval.startTime) &&
+		i.endTime.Before(*interval.endTime) {
 		return true
 	}
 
