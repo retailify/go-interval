@@ -36,54 +36,13 @@ var i1, i2, i3, i4, i5, i6, i7 *interval.TimeInterval
 var t1s, t1e time.Time
 
 func init() {
-	// interval 1
-	v1s := "2014-05-03 00:00 UTC"
-	v1e := "2014-05-04 00:00 UTC"
-	t1s, _ = time.Parse(timeFormat, v1s)
-	t1e, _ = time.Parse(timeFormat, v1e)
-	i1, _ = interval.MakeTimeInterval(&t1s, &t1e)
-
-	// interval 2
-	v2s := "2014-05-05 00:00 UTC"
-	v2e := "2014-05-06 00:00 UTC"
-	t2s, _ := time.Parse(timeFormat, v2s)
-	t2e, _ := time.Parse(timeFormat, v2e)
-	i2, _ = interval.MakeTimeInterval(&t2s, &t2e)
-
-	// interval 3
-	v3s := "2014-05-01 00:00 UTC"
-	v3e := "2014-05-18 00:00 UTC"
-	t3s, _ := time.Parse(timeFormat, v3s)
-	t3e, _ := time.Parse(timeFormat, v3e)
-	i3, _ = interval.MakeTimeInterval(&t3s, &t3e)
-
-	// interval 4
-	v4s := "2014-05-14 00:00 UTC"
-	v4e := "2014-05-30 00:00 UTC"
-	t4s, _ := time.Parse(timeFormat, v4s)
-	t4e, _ := time.Parse(timeFormat, v4e)
-	i4, _ = interval.MakeTimeInterval(&t4s, &t4e)
-
-	// interval 5
-	v5s := "2014-05-15 00:00 UTC"
-	v5e := "2014-05-30 00:00 UTC"
-	t5s, _ := time.Parse(timeFormat, v5s)
-	t5e, _ := time.Parse(timeFormat, v5e)
-	i5, _ = interval.MakeTimeInterval(&t5s, &t5e)
-
-	// interval 6
-	v6s := "2014-05-15 00:00 UTC"
-	v6e := "2014-05-25 00:00 UTC"
-	t6s, _ := time.Parse(timeFormat, v6s)
-	t6e, _ := time.Parse(timeFormat, v6e)
-	i6, _ = interval.MakeTimeInterval(&t6s, &t6e)
-
-	v7s := "2014-05-06 00:00 UTC"
-	v7e := "2014-05-10 00:00 UTC"
-	t7s, _ := time.Parse(timeFormat, v7s)
-	t7e, _ := time.Parse(timeFormat, v7e)
-	i7, _ = interval.MakeTimeInterval(&t7s, &t7e)
-
+	i1, _ = interval.MakeTimeIntervalFromStrings("2014-05-03 00:00 UTC", "2014-05-04 00:00 UTC", timeFormat)
+	i2, _ = interval.MakeTimeIntervalFromStrings("2014-05-05 00:00 UTC", "2014-05-06 00:00 UTC", timeFormat)
+	i3, _ = interval.MakeTimeIntervalFromStrings("2014-05-01 00:00 UTC", "2014-05-18 00:00 UTC", timeFormat)
+	i4, _ = interval.MakeTimeIntervalFromStrings("2014-05-14 00:00 UTC", "2014-05-30 00:00 UTC", timeFormat)
+	i5, _ = interval.MakeTimeIntervalFromStrings("2014-05-15 00:00 UTC", "2014-05-30 00:00 UTC", timeFormat)
+	i6, _ = interval.MakeTimeIntervalFromStrings("2014-05-15 00:00 UTC", "2014-05-25 00:00 UTC", timeFormat)
+	i7, _ = interval.MakeTimeIntervalFromStrings("2014-05-06 00:00 UTC", "2014-05-10 00:00 UTC", timeFormat)
 }
 
 func TestMakeTimeIntervalWithEmptyStartTime(t *testing.T) {
@@ -186,10 +145,12 @@ func TestTimeInterval_Duration(t *testing.T) {
 }
 
 func TestTimeInterval_Start(t *testing.T) {
+	t1s, _ := time.Parse(timeFormat, "2014-05-03 00:00 UTC")
 	assert.Equal(t, t1s, *i1.Start())
 }
 
 func TestTimeInterval_End(t *testing.T) {
+	t1e, _ := time.Parse(timeFormat, "2014-05-04 00:00 UTC")
 	assert.Equal(t, t1e, *i1.End())
 }
 
@@ -259,4 +220,14 @@ func TestTimeInterval_StartedBy(t *testing.T) {
 	assert.False(t, i6.StartedBy(i5))
 	state, _ := i5.Relation(i6, time.Duration(0))
 	assert.Equal(t, interval.StartedBy, state)
+}
+
+func TestMakeTimeIntervalFromStrings(t *testing.T) {
+	i, err := interval.MakeTimeIntervalFromStrings("2014-05-03 00:00 UTC", "2014-05-04 00:00 UTC", timeFormat)
+	assert.NoError(t, err)
+	assert.Equal(t, i1.Start(), i.Start())
+	_, err = interval.MakeTimeIntervalFromStrings("123", "123", timeFormat)
+	assert.Error(t, err)
+	_, err = interval.MakeTimeIntervalFromStrings("2014-05-03 00:00 UTC", "123", timeFormat)
+	assert.Error(t, err)
 }

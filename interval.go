@@ -93,6 +93,9 @@ const (
 
 	// TimeIntervalEmptyEndTimeError error message
 	TimeIntervalEmptyEndTimeError = "end time must not empty"
+
+	// TimeIntervalParseError error message
+	TimeIntervalParseError = "can't parse time string"
 )
 
 // MakeTimeInterval makes a new TimeInterval
@@ -105,6 +108,21 @@ func MakeTimeInterval(start, end *time.Time) (*TimeInterval, error) {
 	}
 
 	return &TimeInterval{startTime: start, endTime: end}, nil
+}
+
+// MakeTimeIntervalFromStrings makes a new TimeInterval from time strings formatted by format
+func MakeTimeIntervalFromStrings(start, end, format string) (*TimeInterval, error) {
+	var startTime, endTime time.Time
+	var err error
+	if startTime, err = time.Parse(format, start); err != nil {
+		return nil, errors.New(TimeIntervalParseError)
+	}
+
+	if endTime, err = time.Parse(format, end); err != nil {
+		return nil, errors.New(TimeIntervalParseError)
+	}
+
+	return MakeTimeInterval(&startTime, &endTime)
 }
 
 // String returns the formatted interval dates
