@@ -14,3 +14,7 @@ script:
 
 after_script:
   - ./cc-test-reporter after-build -t gocov --exit-code $TRAVIS_TEST_RESULT
+
+env:
+  global:
+    - CC_TEST_REPORTER_ID=f62634f496a405cdbfca1472c1626c67ef7531fafa54c7944d2738c8ffa1c706
