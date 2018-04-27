@@ -182,3 +182,12 @@ func TestTimeInterval_FinishedByWithNilParameter(t *testing.T) {
 func TestTimeInterval_FinishedBy(t *testing.T) {
 	assert.True(t, i4.FinishedBy(i5))
 }
+
+func TestTimeInterval_ContainsWithNilParameter(t *testing.T) {
+	assert.False(t, i1.Contains(nil))
+}
+
+func TestTimeInterval_Contains(t *testing.T) {
+	assert.True(t, i3.Contains(i2))
+}
+

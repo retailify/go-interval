@@ -235,7 +235,6 @@ func (i *TimeInterval) Overlaps(interval *TimeInterval) bool {
 // FinishedBy returns true if interval A is finished by B
 //
 // converse relation of OverlappedBy
-//
 func (i *TimeInterval) FinishedBy(interval *TimeInterval) bool {
 	if interval == nil {
 		return false
@@ -249,11 +248,12 @@ func (i *TimeInterval) FinishedBy(interval *TimeInterval) bool {
 // Contains returns true if interval A contains B
 //
 // converse relation to During
-//
-// TODO
 func (i *TimeInterval) Contains(interval *TimeInterval) bool {
 	if interval == nil {
 		return false
+	}
+	if i.startTime.Before(*interval.startTime) && i.endTime.After(*interval.endTime) {
+		return true
 	}
 	return false
 }
