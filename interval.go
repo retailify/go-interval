@@ -59,7 +59,7 @@ func MakeTimeInterval(start, end *time.Time) (*TimeInterval, error) {
 
 // String returns the formatted interval dates
 func (i *TimeInterval) String(format string) string {
-	return fmt.Sprintf("%v - %v", i.startTime.Format(format), i.endTime.Format(format))
+	return fmt.Sprintf("[%v .. %v]", i.startTime.Format(format), i.endTime.Format(format))
 }
 
 // Start returns the start time of the interval
