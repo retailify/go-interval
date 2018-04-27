@@ -21,9 +21,9 @@ import (
 	"testing"
 	"time"
 
+	"fmt"
 	interval "github.com/retailify/go-interval"
 	"github.com/stretchr/testify/assert"
-	"fmt"
 )
 
 const (
