@@ -56,5 +56,5 @@ copyright 2018 by [Retailify GmbH](https://retailify.de)
 [codeclimate-coverage-url]: https://codeclimate.com/github/retailify/go-interval/test_coverage
 [allens-url]: http://www.ics.uci.edu/~alspaugh/cls/shr/allen.html
 [go-doc-url]: https://godoc.org/github.com/retailify/go-interval
-[license-svg]: https://img.shields.io/badge/License-MIT-yellow.svg
+[license-svg]: https://img.shields.io/badge/License-MIT-green.svg
 [license-url]: https://opensource.org/licenses/MIT
