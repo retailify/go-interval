@@ -158,6 +158,9 @@ func TestTimeInterval_Precedes(t *testing.T) {
 
 	constraint := time.Duration(TwentyFourHours)
 
+	assert.True(t, i1.Precedes(i4, constraint))
+	assert.True(t, i1.Precedes(i5, constraint))
+	assert.True(t, i1.Precedes(i6, constraint))
 	assert.True(t, i1.Precedes(i7, constraint))
 	assert.False(t, i1.Precedes(i2, constraint))
 	assert.False(t, i1.Precedes(nil, TwentyFourHours))
@@ -193,6 +196,8 @@ func TestTimeInterval_End(t *testing.T) {
 func TestTimeInterval_Overlaps(t *testing.T) {
 	assert.False(t, i1.Overlaps(nil))
 	assert.True(t, i3.Overlaps(i4))
+	assert.True(t, i3.Overlaps(i5))
+	assert.True(t, i3.Overlaps(i6))
 	assert.False(t, i4.Overlaps(i3))
 	state, _ := i3.Relation(i4, time.Duration(0))
 	assert.Equal(t, interval.Overlaps, state)
