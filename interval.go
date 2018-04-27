@@ -15,37 +15,69 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
+// Package interval contains methods to analyse time intervals and relations between two intervals for go.
+//
+// The package is inspired by Allen's interval algebra
+// and implements the described 13 basic relations between time intervals.
+//
+// See also
+//
+// http://www.ics.uci.edu/~alspaugh/cls/shr/allen.html
 package interval
 
 import (
-	"time"
 	"errors"
 	"fmt"
+	"time"
 )
 
+// TimeInterval is a struct that contains the start and end time for a interval
 type TimeInterval struct {
-	Start *time.Time
-	End *time.Time
+	startTime *time.Time
+	endTime   *time.Time
 }
 
-const EmptyStartTimeError = "start time must not empty"
-const EmptyEndTimeError = "end time must not empty"
+// TimeSlice is a slice of times
+type TimeSlice []time.Time
+
+const (
+	// TimeIntervalEmptyStartTimeError error message
+	TimeIntervalEmptyStartTimeError = "start time must not empty"
+
+	// TimeIntervalEmptyEndTimeError error message
+	TimeIntervalEmptyEndTimeError = "end time must not empty"
+)
 
 // MakeTimeInterval makes a new TimeInterval
-func MakeTimeInterval(start, end *time.Time) (*TimeInterval, error){
+func MakeTimeInterval(start, end *time.Time) (*TimeInterval, error) {
 	if start == nil {
-		return nil, errors.New(EmptyStartTimeError)
+		return nil, errors.New(TimeIntervalEmptyStartTimeError)
 	}
 	if end == nil {
-		return nil, errors.New(EmptyEndTimeError)
+		return nil, errors.New(TimeIntervalEmptyEndTimeError)
 	}
 
-	return &TimeInterval{Start:start, End: end}, nil
+	return &TimeInterval{startTime: start, endTime: end}, nil
 }
 
-// ToString returns the formatted interval dates
-func (i *TimeInterval) ToString(format string) string {
-	return fmt.Sprintf("%v - %v", i.Start.Format(format), i.End.Format(format))
+// String returns the formatted interval dates
+func (i *TimeInterval) String(format string) string {
+	return fmt.Sprintf("%v - %v", i.startTime.Format(format), i.endTime.Format(format))
+}
+
+// Start returns the start time of the interval
+func (i *TimeInterval) Start() *time.Time {
+	return i.startTime
+}
+
+// End returns the end time of the interval
+func (i *TimeInterval) End() *time.Time {
+	return i.endTime
+}
+
+// Duration returns the time.Duration of the interval
+func (i *TimeInterval) Duration() time.Duration {
+	return i.endTime.Sub(*i.startTime)
 }
 
 // Equal checks two time intervals are equal or not
@@ -53,7 +85,7 @@ func (i *TimeInterval) Equal(interval *TimeInterval) bool {
 	if interval == nil {
 		return false
 	}
-	if i.Start.Equal(*interval.Start) && i.End.Equal(*interval.End) {
+	if i.startTime.Equal(*interval.startTime) && i.endTime.Equal(*interval.endTime) {
 		return true
 	}
 	return false
@@ -64,7 +96,7 @@ func (i *TimeInterval) Meets(interval *TimeInterval, constraint time.Duration) b
 	if interval == nil {
 		return false
 	}
-	if result := i.Start.Sub(*interval.End); result != constraint {
+	if result := i.startTime.Sub(*interval.endTime); result != constraint {
 		return false
 	}
 	return true
@@ -75,7 +107,7 @@ func (i *TimeInterval) MetBy(interval *TimeInterval, constraint time.Duration) b
 	if interval == nil {
 		return false
 	}
-	if result := interval.Start.Sub(*i.End); result != constraint {
+	if result := interval.startTime.Sub(*i.endTime); result != constraint {
 		return false
 	}
 	return true
@@ -87,7 +119,7 @@ func (i *TimeInterval) Precedes(interval *TimeInterval, constraint time.Duration
 	if interval == nil {
 		return false
 	}
-	if result := interval.Start.Sub(*i.End); result <= constraint {
+	if result := interval.startTime.Sub(*i.endTime); result <= constraint {
 		return false
 	}
 	return true
@@ -102,7 +134,7 @@ func (i *TimeInterval) Overlaps(interval *TimeInterval) bool {
 		return false
 	}
 
-	fmt.Println(i.End.Sub(*interval.Start))
+	fmt.Println(i.endTime.Sub(*interval.startTime))
 
 	return false;
 }

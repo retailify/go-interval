@@ -15,59 +15,66 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-
-package interval
+package interval_test
 
 import (
 	"testing"
-	"github.com/stretchr/testify/assert"
 	"time"
+
+	interval "github.com/retailify/go-interval"
+	"github.com/stretchr/testify/assert"
 )
 
 const (
-	timeFormat = "2006-01-02 15:04 MST"
+	timeFormat      = "2006-01-02 15:04 MST"
 	TwentyFourHours = 24 * time.Hour
 )
 
-var i1, i2 *TimeInterval
+var i1, i2 *interval.TimeInterval
+var t1s, t1e time.Time
 
 func init() {
 	// interval 2
 	v1s := "2014-05-03 00:00 UTC"
 	v1e := "2014-05-04 00:00 UTC"
-	t1s, _ := time.Parse(timeFormat, v1s)
-	t1e, _ := time.Parse(timeFormat, v1e)
-	i1, _ = MakeTimeInterval(&t1s, &t1e)
+	t1s, _ = time.Parse(timeFormat, v1s)
+	t1e, _ = time.Parse(timeFormat, v1e)
+	i1, _ = interval.MakeTimeInterval(&t1s, &t1e)
 
 	// interval 2
 	v2s := "2014-05-05 00:00 UTC"
 	v2e := "2014-05-06 00:00 UTC"
 	t2s, _ := time.Parse(timeFormat, v2s)
 	t2e, _ := time.Parse(timeFormat, v2e)
-	i2, _ = MakeTimeInterval(&t2s, &t2e)
+	i2, _ = interval.MakeTimeInterval(&t2s, &t2e)
 }
 
 func TestMakeTimeIntervalWithEmptyStartTime(t *testing.T) {
-	_, err := MakeTimeInterval(nil, nil)
-	assert.EqualError(t, err, EmptyStartTimeError)
+	_, err := interval.MakeTimeInterval(nil, nil)
+	assert.EqualError(t, err, interval.TimeIntervalEmptyStartTimeError)
 }
 
 func TestMakeTimeIntervalWithEmptyEndTime(t *testing.T) {
 	startTime := time.Now()
-	_, err := MakeTimeInterval(&startTime, nil)
-	assert.EqualError(t, err, EmptyEndTimeError)
+	_, err := interval.MakeTimeInterval(&startTime, nil)
+	assert.EqualError(t, err, interval.TimeIntervalEmptyEndTimeError)
 }
 
 func TestTimeInterval_ToString(t *testing.T) {
-	assert.Equal(t, "2014-05-03T00:00:00Z - 2014-05-04T00:00:00Z", i1.ToString(time.RFC3339))
+	assert.Equal(t, "2014-05-03T00:00:00Z - 2014-05-04T00:00:00Z", i1.String(time.RFC3339))
+}
+
+func ExampleMakeTimeInterval() {
+	startTime, endTime := time.Now(), time.Now()
+	interval.MakeTimeInterval(&startTime, &endTime)
 }
 
 func TestMakeInterval(t *testing.T) {
 	startTime, endTime := time.Now(), time.Now()
-	interval, err := MakeTimeInterval(&startTime, &endTime)
+	interval, err := interval.MakeTimeInterval(&startTime, &endTime)
 	assert.NoError(t, err)
-	assert.Equal(t, &startTime, interval.Start)
-	assert.Equal(t, &endTime, interval.End)
+	assert.Equal(t, &startTime, interval.Start())
+	assert.Equal(t, &endTime, interval.End())
 }
 
 func TestTimeInterval_EqualWithNilParameter(t *testing.T) {
@@ -109,8 +116,20 @@ func TestTimeInterval_Precedes(t *testing.T) {
 	vPrecedeE := "2014-05-10 00:00 UTC"
 	tPrecedeS, _ := time.Parse(timeFormat, vPrecedeS)
 	tPrecedeE, _ := time.Parse(timeFormat, vPrecedeE)
-	iPrecede, _ := MakeTimeInterval(&tPrecedeS, &tPrecedeE)
+	iPrecede, _ := interval.MakeTimeInterval(&tPrecedeS, &tPrecedeE)
 	constraint := time.Duration(TwentyFourHours)
 	assert.True(t, i1.Precedes(iPrecede, constraint))
 	assert.False(t, i1.Precedes(i2, constraint))
+}
+
+func TestTimeInterval_Duration(t *testing.T) {
+	assert.Equal(t, TwentyFourHours, i1.Duration())
+}
+
+func TestTimeInterval_Start(t *testing.T) {
+	assert.Equal(t, t1s, *i1.Start())
+}
+
+func TestTimeInterval_End(t *testing.T) {
+	assert.Equal(t, t1e, *i1.End())
 }
