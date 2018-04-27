@@ -23,6 +23,7 @@ import (
 
 	interval "github.com/retailify/go-interval"
 	"github.com/stretchr/testify/assert"
+	"fmt"
 )
 
 const (
@@ -60,13 +61,18 @@ func TestMakeTimeIntervalWithEmptyEndTime(t *testing.T) {
 	assert.EqualError(t, err, interval.TimeIntervalEmptyEndTimeError)
 }
 
-func TestTimeInterval_ToString(t *testing.T) {
+func TestTimeInterval_String(t *testing.T) {
 	assert.Equal(t, "2014-05-03T00:00:00Z - 2014-05-04T00:00:00Z", i1.String(time.RFC3339))
 }
 
-func ExampleMakeTimeInterval() {
-	startTime, endTime := time.Now(), time.Now()
-	interval.MakeTimeInterval(&startTime, &endTime)
+func ExampleTimeInterval_String() {
+	v1s := "2014-05-03 00:00 UTC"
+	v1e := "2014-05-04 00:00 UTC"
+	startTime, _ := time.Parse(timeFormat, v1s)
+	endTime, _ := time.Parse(timeFormat, v1e)
+	interval, _ := interval.MakeTimeInterval(&startTime, &endTime)
+	fmt.Println(interval.String(time.RFC3339))
+	// prints "2014-05-03T00:00:00Z - 2014-05-04T00:00:00Z"
 }
 
 func TestMakeInterval(t *testing.T) {
@@ -75,6 +81,11 @@ func TestMakeInterval(t *testing.T) {
 	assert.NoError(t, err)
 	assert.Equal(t, &startTime, interval.Start())
 	assert.Equal(t, &endTime, interval.End())
+}
+
+func ExampleMakeTimeInterval() {
+	startTime, endTime := time.Now(), time.Now()
+	interval.MakeTimeInterval(&startTime, &endTime)
 }
 
 func TestTimeInterval_EqualWithNilParameter(t *testing.T) {

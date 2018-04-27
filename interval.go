@@ -37,9 +37,6 @@ type TimeInterval struct {
 	endTime   *time.Time
 }
 
-// TimeSlice is a slice of times
-type TimeSlice []time.Time
-
 const (
 	// TimeIntervalEmptyStartTimeError error message
 	TimeIntervalEmptyStartTimeError = "start time must not empty"
