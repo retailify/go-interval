@@ -230,4 +230,17 @@ func TestMakeTimeIntervalFromStrings(t *testing.T) {
 	assert.Error(t, err)
 	_, err = interval.MakeTimeIntervalFromStrings("2014-05-03 00:00 UTC", "123", timeFormat)
 	assert.Error(t, err)
+
+}
+
+func ExampleTimeInterval_Relation() {
+	var iv1, iv2 *interval.TimeInterval
+	iv1, _ = interval.MakeTimeIntervalFromStrings(
+		"2014-05-03 00:00 UTC", "2014-05-04 00:00 UTC", "2006-01-02 15:04 MST")
+	iv2, _ = interval.MakeTimeIntervalFromStrings(
+		"2014-05-15 00:00 UTC", "2014-05-30 00:00 UTC", "2006-01-02 15:04 MST")
+
+	if state, err := iv1.Relation(iv2, time.Duration(0)); err == nil && state == interval.Equals {
+		fmt.Println("intervals are idendtical")
+	}
 }
