@@ -7,6 +7,7 @@ The library is ready for production if I tag the library with 1.0.0.
 [![Build Status][travis-svg]][travis-url]
 [![Go Report Card][go-report-badge]][go-report-url]
 [![Maintainability][codeclimate-badge]][codeclimate-url]
+[![Test Coverage][codeclimate-coverage-badge]][codeclimate-coverage-url]
 
 This library implements the [Allen's interval algebra][allens-url] for
 go lang time intervals.
@@ -50,5 +51,7 @@ copyright 2018 by [Retailify GmbH](https://retailify.de)
 [go-report-url]: https://goreportcard.com/report/github.com/retailify/go-interval
 [codeclimate-badge]: https://api.codeclimate.com/v1/badges/19b3641a71295105f000/maintainability
 [codeclimate-url]: https://codeclimate.com/github/retailify/go-interval/maintainability
+[codeclimate-coverage-badge]: https://api.codeclimate.com/v1/badges/19b3641a71295105f000/test_coverage
+[codeclimate-coverage-url]: https://codeclimate.com/github/retailify/go-interval/test_coverage
 [allens-url]: http://www.ics.uci.edu/~alspaugh/cls/shr/allen.html
 [go-doc-url]: https://godoc.org/github.com/retailify/go-interval
