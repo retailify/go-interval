@@ -236,10 +236,12 @@ func (i *TimeInterval) Overlaps(interval *TimeInterval) bool {
 //
 // converse relation of OverlappedBy
 //
-// TODO
 func (i *TimeInterval) FinishedBy(interval *TimeInterval) bool {
 	if interval == nil {
 		return false
+	}
+	if i.startTime.Before(*interval.startTime) && i.endTime.Equal(*interval.endTime){
+		return true
 	}
 	return false
 }
