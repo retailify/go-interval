@@ -94,7 +94,7 @@ const (
 	// TimeIntervalEmptyEndTimeError error message
 	TimeIntervalEmptyEndTimeError = "end time must not empty"
 
-	// TimeIntervalEmptyEndTimeError error message
+	// TimeIntervalParseError error message
 	TimeIntervalParseError = "can't parse time string"
 )
 
