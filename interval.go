@@ -85,8 +85,8 @@ const (
 )
 
 const (
-	// TimeIntervalNilError error message
-	TimeIntervalNilError = "interval must not nil"
+	// TimeIntervalError error message
+	TimeIntervalError = "interval must not nil or unknown error"
 
 	// TimeIntervalEmptyStartTimeError error message
 	TimeIntervalEmptyStartTimeError = "start time must not empty"
@@ -128,40 +128,40 @@ func (i *TimeInterval) Duration() time.Duration {
 }
 
 // Relation return the state of two intervals
-func (i *TimeInterval) Relation(interval *TimeInterval, constraint time.Duration) (state State, err error) {
-	state = Unknown
-	err = nil
+func (i *TimeInterval) Relation(interval *TimeInterval, constraint time.Duration) (State, error) {
+	err := errors.New(TimeIntervalError)
+
 	if interval == nil {
-		state, err = Unknown, errors.New(TimeIntervalNilError)
+		return Unknown, err
 	} else if i.Precedes(interval, constraint) {
-		state = Precedes
+		return Precedes, nil
 	} else if i.Meets(interval, constraint) {
-		state = Meets
+		return Meets, nil
 	} else if i.Overlaps(interval) {
-		state = Overlaps
+		return Overlaps, nil
 	} else if i.FinishedBy(interval) {
-		state = FinishedBy
+		return FinishedBy, nil
 	} else if i.Contains(interval) {
-		state = Contains
+		return Contains, nil
 	} else if i.Starts(interval) {
-		state = Starts
+		return Starts, nil
 	} else if i.Equal(interval) {
-		state = Equals
+		return Equals, nil
 	} else if i.StartedBy(interval) {
-		state = StartedBy
+		return StartedBy, nil
 	} else if i.During(interval) {
-		state = During
+		return During, nil
 	} else if i.Finishes(interval) {
-		state = Finishes
+		return Finishes, nil
 	} else if i.OverlappedBy(interval) {
-		state = OverlappedBy
+		return OverlappedBy, nil
 	} else if i.MetBy(interval, constraint) {
-		state = MetBy
+		return MetBy, nil
 	} else if i.PrecededBy(interval, constraint) {
-		state = PrecededBy
+		return PrecededBy, nil
 	}
 
-	return
+	return Unknown, err
 }
 
 // Equal checks two time intervals are equal or not
