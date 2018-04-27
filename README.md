@@ -1,5 +1,8 @@
 # go-interval
 
+**BE WARNED:** This is work in progress. The library is not completely implemented!
+The library is ready for production if I tag the library with 1.0.0.
+
 [![Build Status](https://travis-ci.org/retailify/go-interval.svg?branch=master)](https://travis-ci.org/retailify/go-interval) [![Go Report Card](https://goreportcard.com/badge/github.com/retailify/go-interval)](https://goreportcard.com/report/github.com/retailify/go-interval) [![Maintainability](https://api.codeclimate.com/v1/badges/19b3641a71295105f000/maintainability)](https://codeclimate.com/github/retailify/go-interval/maintainability)
 
 
