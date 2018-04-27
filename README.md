@@ -44,7 +44,7 @@ glide get github.com/retailify/go-interval
 import "github.com/retailify/go-interval"
 ```
 
-copyright 2018 by [Retailify GmbH](https://retailify.de)
+&copy; 2018 by [Retailify GmbH](https://retailify.de)
 
 [travis-svg]: https://travis-ci.org/retailify/go-interval.svg?branch=master
 [travis-url]: https://travis-ci.org/retailify/go-interval
