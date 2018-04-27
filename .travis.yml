@@ -1,7 +1,14 @@
 language: go
 
 go:
-  - "1.x"
-  - "1.8"
+  - "1.9"
   - "1.10.x"
-  - master
+before_script:
+  - test-reporter before-build
+script:
+  - go test -coverprofile c.out
+after_script:
+  - test-reporter after-build --exit-code $TRAVIS_TEST_RESULT
+env:
+  global:
+    - CC_TEST_REPORTER_ID=f62634f496a405cdbfca1472c1626c67ef7531fafa54c7944d2738c8ffa1c706
