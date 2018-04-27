@@ -41,47 +41,53 @@ type TimeInterval struct {
 type State int
 
 const (
+	//Unknown relation
+	Unknown State = 0
+
 	//Precedes relation
-	Precedes State = 0
+	Precedes State = 1
 
 	// Meets relation
-	Meets State = 1
+	Meets State = 2
 
 	// Overlaps relation
-	Overlaps State = 2
+	Overlaps State = 3
 
 	// FinishedBy relation
-	FinishedBy State = 3
+	FinishedBy State = 4
 
 	// Contains relation
-	Contains State = 4
+	Contains State = 5
 
 	// Starts relation
-	Starts State = 5
+	Starts State = 6
 
 	// Equals relation
-	Equals State = 6
+	Equals State = 7
 
 	// StartedBy relation
-	StartedBy State = 7
+	StartedBy State = 8
 
 	// During relation
-	During State = 8
+	During State = 9
 
 	// Finishes relation
-	Finishes State = 9
+	Finishes State = 10
 
 	// OverlappedBy relation
-	OverlappedBy State = 10
+	OverlappedBy State = 11
 
 	// MetBy relation
-	MetBy State = 11
+	MetBy State = 12
 
 	// PrecededBy relation
-	PrecededBy State = 12
+	PrecededBy State = 13
 )
 
 const (
+	// TimeIntervalEmptyStartTimeError error message
+	TimeIntervalNilError = "interval must not nil"
+
 	// TimeIntervalEmptyStartTimeError error message
 	TimeIntervalEmptyStartTimeError = "start time must not empty"
 
@@ -121,7 +127,26 @@ func (i *TimeInterval) Duration() time.Duration {
 	return i.endTime.Sub(*i.startTime)
 }
 
+// Relation return the state of two intervals
+func (i *TimeInterval) Relation(interval *TimeInterval, constraint time.Duration) (state State, err error)  {
+	state = Unknown
+	err = nil
+	if interval == nil {
+		return Unknown, errors.New(TimeIntervalNilError)
+	} else if i.Precedes(interval, constraint) {
+		return Precedes, nil
+	} else if i.Meets(interval, constraint) {
+		return Meets, nil
+	} else if i.Overlaps(interval) {
+		return Overlaps, nil
+	}
+
+	return
+}
+
 // Equal checks two time intervals are equal or not
+//
+// converse relation of Equal is Equal
 func (i *TimeInterval) Equal(interval *TimeInterval) bool {
 	if interval == nil {
 		return false
@@ -133,6 +158,8 @@ func (i *TimeInterval) Equal(interval *TimeInterval) bool {
 }
 
 // Meets returns true if interval A meets B
+//
+// converse relation of MetBy
 func (i *TimeInterval) Meets(interval *TimeInterval, constraint time.Duration) bool {
 	if interval == nil {
 		return false
@@ -144,6 +171,8 @@ func (i *TimeInterval) Meets(interval *TimeInterval, constraint time.Duration) b
 }
 
 // MetBy returns true if interval A is met by B
+//
+// converse relation of Met
 func (i *TimeInterval) MetBy(interval *TimeInterval, constraint time.Duration) bool {
 	if interval == nil {
 		return false
@@ -154,7 +183,8 @@ func (i *TimeInterval) MetBy(interval *TimeInterval, constraint time.Duration) b
 	return true
 }
 
-// Precedes returns true if interval A preceds B
+// Precedes returns true if interval A precedes B by duration
+//
 // converse relation of PrecedesBy
 func (i *TimeInterval) Precedes(interval *TimeInterval, constraint time.Duration) bool {
 	if interval == nil {
@@ -166,10 +196,12 @@ func (i *TimeInterval) Precedes(interval *TimeInterval, constraint time.Duration
 	return true
 }
 
-/* TODO
 
-// Overlaps
+// Overlaps returns true if interval A overlaps B
+//
 // converse relation of OverlappedBy
+//
+// TODO
 func (i *TimeInterval) Overlaps(interval *TimeInterval) bool {
 	if interval == nil {
 		return false
@@ -180,7 +212,11 @@ func (i *TimeInterval) Overlaps(interval *TimeInterval) bool {
 	return false;
 }
 
-// FinishedBy
+// FinishedBy returns true if interval A is finished by B
+//
+// converse relation of OverlappedBy
+//
+// TODO
 func (i *TimeInterval) FinishedBy(interval *TimeInterval) bool {
 	if interval == nil {
 		return false
@@ -188,33 +224,93 @@ func (i *TimeInterval) FinishedBy(interval *TimeInterval) bool {
 	return false;
 }
 
-// Contains
+// Contains returns true if interval A contains B
+//
+// converse relation to During
+//
+// TODO
 func (i *TimeInterval) Contains(interval *TimeInterval) bool {
 	if interval == nil {
 		return false
 	}
 	return false;
-}
+};
 
-// Starts
+// Starts returns true if interval A's startTime is identical with interval B's startTime and interval A's duration
+// is greater than interval B's duration
+//
+// converse relation of StartedBy
+//
+// TODO
 func (i *TimeInterval) Starts(interval *TimeInterval) bool {
+	if interval == nil {
+		return false
+	}
+	return false;
+};
+
+
+// StartedBy returns true if interval A startTime is identical with interval B startTime and interval A's duration
+// is shorter than interval B's duration
+//
+// converse relation of Starts
+//
+// TODO
+func (i *TimeInterval) StartedBy(interval *TimeInterval) bool {
 	if interval == nil {
 		return false
 	}
 	return false;
 }
 
-// StartedBy
+// During returns true if interval A is contained by interval B
+//
+// converse relation of Contains
+//
+// TODO
+func (i *TimeInterval) During(interval *TimeInterval) bool {
+	if interval == nil {
+		return false
+	}
+	return false;
+}
 
-// During
+// Finishes returns true if interval A's endTime is identical with B's endTime and B's startTime is greater than
+// A's startTime
+//
+// converse relation of FinishedBy
+//
+// TODO
+func (i *TimeInterval) Finishes(interval *TimeInterval) bool {
+	if interval == nil {
+		return false
+	}
+	return false;
+}
 
-// Finishes
+// OverlappedBy returns true if interval A's startTime is contained in interval B and greater than B's startTime
+// and A's endTime is greater than B's endTime
+//
+// converse relation to Overlaps
+//
+// TODO
+func (i *TimeInterval) OverlappedBy(interval *TimeInterval) bool {
+	if interval == nil {
+		return false
+	}
+	return false;
+}
 
-// OverlappedBy
-// converse relation of OverlappedBy
 
-// MetBy
-
-// PrecededBy
+// PrecededBy returns true if interval A is preceded by B. That's the case if interval B's endTime + constraint is
+// greater than A's startTime
+//
 // converse relation of Precedes
-*/
+//
+// TODO
+func (i *TimeInterval) PrecededBy(interval *TimeInterval, constraint time.Duration) bool {
+	if interval == nil {
+		return false
+	}
+	return false;
+}
