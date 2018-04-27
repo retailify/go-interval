@@ -124,13 +124,10 @@ func ExampleMakeTimeInterval() {
 	interval.MakeTimeInterval(&startTime, &endTime)
 }
 
-func TestTimeInterval_EqualsWithNilParameter(t *testing.T) {
-	assert.False(t, i1.Equals(nil))
-}
-
 func TestTimeInterval_Equals(t *testing.T) {
 	assert.False(t, i1.Equals(i2))
 	assert.True(t, i1.Equals(i1))
+	assert.False(t, i1.Equals(nil))
 }
 
 func TestTimeInterval_Meets(t *testing.T) {
@@ -186,30 +183,36 @@ func TestTimeInterval_End(t *testing.T) {
 func TestTimeInterval_Overlaps(t *testing.T) {
 	assert.False(t, i1.Overlaps(nil))
 	assert.True(t, i3.Overlaps(i4))
+	assert.False(t, i4.Overlaps(i3))
 }
 
 func TestTimeInterval_OverlappedBy(t *testing.T) {
 	assert.False(t, i1.OverlappedBy(nil))
+	assert.False(t, i3.OverlappedBy(i4))
 	assert.True(t, i4.OverlappedBy(i3))
 }
 
 func TestTimeInterval_Finishes(t *testing.T) {
 	assert.True(t, i5.Finishes(i4))
+	assert.False(t, i4.Finishes(i5))
 	assert.False(t, i1.Finishes(nil))
 }
 
 func TestTimeInterval_FinishedBy(t *testing.T) {
 	assert.True(t, i4.FinishedBy(i5))
+	assert.False(t, i5.FinishedBy(i4))
 	assert.False(t, i1.FinishedBy(nil))
 }
 
 func TestTimeInterval_Contains(t *testing.T) {
 	assert.True(t, i3.Contains(i2))
+	assert.False(t, i2.Contains(i3))
 	assert.False(t, i1.Contains(nil))
 }
 
 func TestTimeInterval_During(t *testing.T) {
 	assert.True(t, i2.During(i3))
+	assert.False(t, i3.During(i2))
 	assert.False(t, i1.During(nil))
 }
 
@@ -217,9 +220,11 @@ func TestTimeInterval_During(t *testing.T) {
 func TestTimeInterval_Starts(t *testing.T) {
 	assert.False(t, i1.Starts(nil))
 	assert.True(t, i6.Starts(i5))
+	assert.False(t, i5.Starts(i6))
 }
 
 func TestTimeInterval_StartedBy(t *testing.T) {
 	assert.False(t, i1.StartedBy(nil))
 	assert.True(t, i5.StartedBy(i6))
+	assert.False(t, i6.StartedBy(i5))
 }
