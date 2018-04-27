@@ -132,13 +132,33 @@ func (i *TimeInterval) Relation(interval *TimeInterval, constraint time.Duration
 	state = Unknown
 	err = nil
 	if interval == nil {
-		return Unknown, errors.New(TimeIntervalNilError)
+		state, err = Unknown, errors.New(TimeIntervalNilError)
 	} else if i.Precedes(interval, constraint) {
-		return Precedes, nil
+		state = Precedes
 	} else if i.Meets(interval, constraint) {
-		return Meets, nil
+		state = Meets
 	} else if i.Overlaps(interval) {
-		return Overlaps, nil
+		state = Overlaps
+	} else if i.FinishedBy(interval) {
+		state = FinishedBy
+	} else if i.Contains(interval) {
+		state = Contains
+	} else if i.Starts(interval) {
+		state = Starts
+	} else if i.Equal(interval) {
+		state = Equals
+	} else if i.StartedBy(interval) {
+		state = StartedBy
+	} else if i.During(interval) {
+		state = During
+	} else if i.Finishes(interval) {
+		state = Finishes
+	} else if i.OverlappedBy(interval) {
+		state = OverlappedBy
+	} else if i.MetBy(interval, constraint) {
+		state = MetBy
+	} else if i.PrecededBy(interval, constraint) {
+		state = PrecededBy
 	}
 
 	return
@@ -173,6 +193,8 @@ func (i *TimeInterval) Meets(interval *TimeInterval, constraint time.Duration) b
 // MetBy returns true if interval A is met by B
 //
 // converse relation of Met
+//
+// TODO
 func (i *TimeInterval) MetBy(interval *TimeInterval, constraint time.Duration) bool {
 	if interval == nil {
 		return false
