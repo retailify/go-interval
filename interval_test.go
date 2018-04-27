@@ -128,6 +128,10 @@ func TestTimeInterval_Equals(t *testing.T) {
 	assert.False(t, i1.Equals(i2))
 	assert.True(t, i1.Equals(i1))
 	assert.False(t, i1.Equals(nil))
+	state, _ := i1.Relation(nil, time.Duration(0))
+	assert.Equal(t, interval.Unknown, state)
+	state, _ = i1.Relation(i1, time.Duration(0))
+	assert.Equal(t, interval.Equals, state)
 }
 
 func TestTimeInterval_Meets(t *testing.T) {
@@ -135,6 +139,9 @@ func TestTimeInterval_Meets(t *testing.T) {
 	assert.True(t, i2.Meets(i1, constraint))
 	assert.False(t, i1.Meets(i1, constraint))
 	assert.False(t, i1.Meets(nil, TwentyFourHours))
+
+	state, _ := i2.Relation(i1, constraint)
+	assert.Equal(t, interval.Meets, state)
 }
 
 func TestTimeInterval_MetBy(t *testing.T) {
@@ -142,6 +149,9 @@ func TestTimeInterval_MetBy(t *testing.T) {
 	assert.True(t, i1.MetBy(i2, constraint))
 	assert.False(t, i1.MetBy(i1, constraint))
 	assert.False(t, i1.MetBy(nil, TwentyFourHours))
+
+	state, _ := i1.Relation(i2, constraint)
+	assert.Equal(t, interval.MetBy, state)
 }
 
 func TestTimeInterval_Precedes(t *testing.T) {
@@ -151,9 +161,13 @@ func TestTimeInterval_Precedes(t *testing.T) {
 	tPrecedeE, _ := time.Parse(timeFormat, vPrecedeE)
 	iPrecede, _ := interval.MakeTimeInterval(&tPrecedeS, &tPrecedeE)
 	constraint := time.Duration(TwentyFourHours)
+
 	assert.True(t, i1.Precedes(iPrecede, constraint))
 	assert.False(t, i1.Precedes(i2, constraint))
 	assert.False(t, i1.Precedes(nil, TwentyFourHours))
+
+	state, _ := i1.Relation(iPrecede, constraint)
+	assert.Equal(t, interval.Precedes, state)
 }
 
 func TestTimeInterval_PrecededBy(t *testing.T) {
@@ -166,6 +180,8 @@ func TestTimeInterval_PrecededBy(t *testing.T) {
 	assert.True(t, iPrecede.PrecededBy(i1, constraint))
 	assert.False(t, i2.PrecededBy(i1, constraint))
 	assert.False(t, i1.PrecededBy(nil, TwentyFourHours))
+	state, _ := iPrecede.Relation(i1, constraint)
+	assert.Equal(t, interval.PrecededBy, state)
 }
 
 func TestTimeInterval_Duration(t *testing.T) {
@@ -184,47 +200,62 @@ func TestTimeInterval_Overlaps(t *testing.T) {
 	assert.False(t, i1.Overlaps(nil))
 	assert.True(t, i3.Overlaps(i4))
 	assert.False(t, i4.Overlaps(i3))
+	state, _ := i3.Relation(i4, time.Duration(0))
+	assert.Equal(t, interval.Overlaps, state)
 }
 
 func TestTimeInterval_OverlappedBy(t *testing.T) {
 	assert.False(t, i1.OverlappedBy(nil))
 	assert.False(t, i3.OverlappedBy(i4))
 	assert.True(t, i4.OverlappedBy(i3))
+	state, _ := i4.Relation(i3, time.Duration(0))
+	assert.Equal(t, interval.OverlappedBy, state)
 }
 
 func TestTimeInterval_Finishes(t *testing.T) {
 	assert.True(t, i5.Finishes(i4))
 	assert.False(t, i4.Finishes(i5))
 	assert.False(t, i1.Finishes(nil))
+	state, _ := i5.Relation(i4, time.Duration(0))
+	assert.Equal(t, interval.Finishes, state)
 }
 
 func TestTimeInterval_FinishedBy(t *testing.T) {
 	assert.True(t, i4.FinishedBy(i5))
 	assert.False(t, i5.FinishedBy(i4))
 	assert.False(t, i1.FinishedBy(nil))
+	state, _ := i4.Relation(i5, time.Duration(0))
+	assert.Equal(t, interval.FinishedBy, state)
 }
 
 func TestTimeInterval_Contains(t *testing.T) {
 	assert.True(t, i3.Contains(i2))
 	assert.False(t, i2.Contains(i3))
 	assert.False(t, i1.Contains(nil))
+	state, _ := i3.Relation(i2, time.Duration(0))
+	assert.Equal(t, interval.Contains, state)
 }
 
 func TestTimeInterval_During(t *testing.T) {
 	assert.True(t, i2.During(i3))
 	assert.False(t, i3.During(i2))
 	assert.False(t, i1.During(nil))
+	state, _ := i2.Relation(i3, time.Duration(0))
+	assert.Equal(t, interval.During, state)
 }
-
 
 func TestTimeInterval_Starts(t *testing.T) {
 	assert.False(t, i1.Starts(nil))
 	assert.True(t, i6.Starts(i5))
 	assert.False(t, i5.Starts(i6))
+	state, _ := i6.Relation(i5, time.Duration(0))
+	assert.Equal(t, interval.Starts, state)
 }
 
 func TestTimeInterval_StartedBy(t *testing.T) {
 	assert.False(t, i1.StartedBy(nil))
 	assert.True(t, i5.StartedBy(i6))
 	assert.False(t, i6.StartedBy(i5))
+	state, _ := i5.Relation(i6, time.Duration(0))
+	assert.Equal(t, interval.StartedBy, state)
 }
