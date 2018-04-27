@@ -18,6 +18,10 @@ go lang time intervals.
 go get github.com/retailify/go-time-interval
 ```
 
+## Documentation
+
+[godoc.org documentation](https://godoc.org/github.com/retailify/go-interval)
+
 ## Usage
 
 ``` go
