@@ -85,7 +85,7 @@ const (
 )
 
 const (
-	// TimeIntervalEmptyStartTimeError error message
+	// TimeIntervalNilError error message
 	TimeIntervalNilError = "interval must not nil"
 
 	// TimeIntervalEmptyStartTimeError error message
@@ -128,7 +128,7 @@ func (i *TimeInterval) Duration() time.Duration {
 }
 
 // Relation return the state of two intervals
-func (i *TimeInterval) Relation(interval *TimeInterval, constraint time.Duration) (state State, err error)  {
+func (i *TimeInterval) Relation(interval *TimeInterval, constraint time.Duration) (state State, err error) {
 	state = Unknown
 	err = nil
 	if interval == nil {
@@ -196,7 +196,6 @@ func (i *TimeInterval) Precedes(interval *TimeInterval, constraint time.Duration
 	return true
 }
 
-
 // Overlaps returns true if interval A overlaps B
 //
 // converse relation of OverlappedBy
@@ -209,7 +208,7 @@ func (i *TimeInterval) Overlaps(interval *TimeInterval) bool {
 
 	fmt.Println(i.endTime.Sub(*interval.startTime))
 
-	return false;
+	return false
 }
 
 // FinishedBy returns true if interval A is finished by B
@@ -221,7 +220,7 @@ func (i *TimeInterval) FinishedBy(interval *TimeInterval) bool {
 	if interval == nil {
 		return false
 	}
-	return false;
+	return false
 }
 
 // Contains returns true if interval A contains B
@@ -233,8 +232,8 @@ func (i *TimeInterval) Contains(interval *TimeInterval) bool {
 	if interval == nil {
 		return false
 	}
-	return false;
-};
+	return false
+}
 
 // Starts returns true if interval A's startTime is identical with interval B's startTime and interval A's duration
 // is greater than interval B's duration
@@ -246,9 +245,8 @@ func (i *TimeInterval) Starts(interval *TimeInterval) bool {
 	if interval == nil {
 		return false
 	}
-	return false;
-};
-
+	return false
+}
 
 // StartedBy returns true if interval A startTime is identical with interval B startTime and interval A's duration
 // is shorter than interval B's duration
@@ -260,7 +258,7 @@ func (i *TimeInterval) StartedBy(interval *TimeInterval) bool {
 	if interval == nil {
 		return false
 	}
-	return false;
+	return false
 }
 
 // During returns true if interval A is contained by interval B
@@ -272,7 +270,7 @@ func (i *TimeInterval) During(interval *TimeInterval) bool {
 	if interval == nil {
 		return false
 	}
-	return false;
+	return false
 }
 
 // Finishes returns true if interval A's endTime is identical with B's endTime and B's startTime is greater than
@@ -285,7 +283,7 @@ func (i *TimeInterval) Finishes(interval *TimeInterval) bool {
 	if interval == nil {
 		return false
 	}
-	return false;
+	return false
 }
 
 // OverlappedBy returns true if interval A's startTime is contained in interval B and greater than B's startTime
@@ -298,9 +296,8 @@ func (i *TimeInterval) OverlappedBy(interval *TimeInterval) bool {
 	if interval == nil {
 		return false
 	}
-	return false;
+	return false
 }
-
 
 // PrecededBy returns true if interval A is preceded by B. That's the case if interval B's endTime + constraint is
 // greater than A's startTime
@@ -312,5 +309,5 @@ func (i *TimeInterval) PrecededBy(interval *TimeInterval, constraint time.Durati
 	if interval == nil {
 		return false
 	}
-	return false;
+	return false
 }
