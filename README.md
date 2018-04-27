@@ -1,7 +1,6 @@
 # go-interval
 
-**BE WARNED:** This is work in progress. The library is not completely
-implemented!
+**BE WARNED:**
 The library is ready for production if I tag the library with 1.0.0.
 
 [![Build Status][travis-svg]][travis-url]
