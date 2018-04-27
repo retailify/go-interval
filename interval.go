@@ -15,7 +15,7 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-// Package interval contains methods to analyse time intervals and relations between two intervals for go.
+// Package interval contains methods to analyze time intervals and relations between two intervals for go.
 //
 // The package is inspired by Allen's interval algebra
 // and implements the described 13 basic relations between time intervals.
